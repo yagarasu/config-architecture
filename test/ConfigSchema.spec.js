@@ -1,6 +1,7 @@
 import chai, { expect } from 'chai'
 import sinon from 'sinon'
 import sinonChai from 'sinon-chai'
+import typeDetect from 'type-detect'
 
 chai.use(sinonChai)
 
@@ -75,79 +76,34 @@ describe('ConfigSchema', () => {
     })
   })
 
-  describe('Per type', () => {
-    it('should validate String fields: Valid', () => {
-      const mock = getMockConfigManager('a string')
-      const schema = new ConfigSchema({ myField: 'string' })
-      const res = schema.validate(mock)
+  describe('Types', () => {
+    const types = ['string', 'number', 'boolean', 'Array']
+    const args = ['a string', 10, true, ['Array']]
+    const expectations = [
+      [ true, false, false, false ], // string
+      [ false, true, false, false ], // number
+      [ false, false, true, false ], // boolean
+      [ false, false, false, true ] // Array
+    ]
+    types.forEach((type, ti) => {
+      args.forEach((arg, ai) => {
+        it(`should validate ${type} with ${typeDetect(arg)}`, () => {
+          const mock = getMockConfigManager(arg)
+          const schema = new ConfigSchema({ myField: type })
+          const res = schema.validate(mock)
 
-      expect(res).to.be.true
-      expect(schema.lastErrors).to.be.null
-      expect(mock.get).to.have.been.calledWith('myField')
+          expect(mock.get).to.have.been.calledWith('myField')
+          if (expectations[ti][ai]) {
+            expect(res).to.be.true
+            expect(schema.lastErrors).to.be.null
+          } else {
+            expect(res).to.be.false
+            expect(schema.lastErrors).to.be.an('array').and.to.have.lengthOf(1)
+          }
+        })
+      })
     })
-    it('should validate String fields: Invalid', () => {
-      const mock = getMockConfigManager(10)
-      const schema = new ConfigSchema({ myField: 'string' })
-      const res = schema.validate(mock)
 
-      expect(res).to.be.false
-      expect(schema.lastErrors).to.be.an('array').and.to.have.lengthOf(1)
-      expect(mock.get).to.have.been.calledWith('myField')
-    })
-    it('should validate Number fields: Valid', () => {
-      const mock = getMockConfigManager(10)
-      const schema = new ConfigSchema({ myField: 'number' })
-      const res = schema.validate(mock)
-
-      expect(res).to.be.true
-      expect(schema.lastErrors).to.be.null
-      expect(mock.get).to.have.been.calledWith('myField')
-    })
-    it('should validate Number fields: Invalid', () => {
-      const mock = getMockConfigManager('12')
-      const schema = new ConfigSchema({ myField: 'number' })
-      const res = schema.validate(mock)
-
-      expect(res).to.be.false
-      expect(schema.lastErrors).to.be.an('array').and.to.have.lengthOf(1)
-      expect(mock.get).to.have.been.calledWith('myField')
-    })
-    it('should validate Boolean fields: Valid', () => {
-      const mock = getMockConfigManager(true)
-      const schema = new ConfigSchema({ myField: 'boolean' })
-      const res = schema.validate(mock)
-
-      expect(res).to.be.true
-      expect(schema.lastErrors).to.be.null
-      expect(mock.get).to.have.been.calledWith('myField')
-    })
-    it('should validate Boolean fields: Invalid', () => {
-      const mock = getMockConfigManager(10)
-      const schema = new ConfigSchema({ myField: 'boolean' })
-      const res = schema.validate(mock)
-
-      expect(res).to.be.false
-      expect(schema.lastErrors).to.be.an('array').and.to.have.lengthOf(1)
-      expect(mock.get).to.have.been.calledWith('myField')
-    })
-    it('should validate Array fields: Valid', () => {
-      const mock = getMockConfigManager(['Foo'])
-      const schema = new ConfigSchema({ myField: 'Array' })
-      const res = schema.validate(mock)
-
-      expect(res).to.be.true
-      expect(schema.lastErrors).to.be.null
-      expect(mock.get).to.have.been.calledWith('myField')
-    })
-    it('should validate Array fields: Invalid', () => {
-      const mock = getMockConfigManager(10)
-      const schema = new ConfigSchema({ myField: 'Array' })
-      const res = schema.validate(mock)
-
-      expect(res).to.be.false
-      expect(schema.lastErrors).to.be.an('array').and.to.have.lengthOf(1)
-      expect(mock.get).to.have.been.calledWith('myField')
-    })
     it('should validate nested fields: Valid', () => {
       const mock = getMockConfigManager('Foo')
       const schema = new ConfigSchema({ myField: { nested: 'string'} })
