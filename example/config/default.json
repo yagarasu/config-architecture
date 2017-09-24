@@ -1,0 +1,9 @@
+{
+  "simple": "simple",
+  "withType": 10,
+  "nested": {
+    "foo": true,
+    "bar": false
+  },
+  "validated": "wawawa"
+}
