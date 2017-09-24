@@ -1,0 +1,16 @@
+{
+  "string": "a string",
+  "number": 10,
+  "boolean": true,
+  "array": ["foo", "bar"],
+  "nested": {
+    "otherString": "string",
+    "otherNumber": 10,
+    "deep": {
+      "otherOtherString": "string",
+      "further": {
+        "lastString": "last string"
+      }
+    }
+  }
+}
