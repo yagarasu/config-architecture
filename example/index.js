@@ -20,8 +20,11 @@ var cs = new ConfigSchema({
 });
 
 Config.schema(cs)
-  .addSource(new JsonDriver(path.join(__dirname, './config/default.json')));
+  .addSource(new JsonDriver(path.join(__dirname, './config/default.json')))
+  .addSource(new JsonDriver(path.join(__dirname, './config/development.json')))
+  .addSource(new JsonDriver(path.join(__dirname, './config/local.json')));
 
-console.log(Config.get('validated', 'notfound'))
+console.log('validated', Config.get('validated', 'notfound'))
+console.log('simple', Config.get('simple', 'notfound'))
 
 Config.validate();
