@@ -19,9 +19,12 @@ class Config {
     this._schema = schema
     return this
   }
-  validate () {
+  validate (path) {
     if (!this._schema) throw new Error('Can not validate without a schema.')
-    return this._schema.validate(this)
+    return this._schema.validate(this, path)
+  }
+  validationErrors () {
+    return this._schema.lastErrors
   }
 }
 

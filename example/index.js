@@ -13,7 +13,7 @@ var cs = new ConfigSchema({
   },
   validated: {
     type: 'string',
-    validate: function (value, expect) {
+    validator: function (value, expect) {
       expect(value).to.match(/^https?\:\/\//)
     }
   }
@@ -24,7 +24,13 @@ Config.schema(cs)
   .addSource(new JsonDriver(path.join(__dirname, './config/development.json')))
   .addSource(new JsonDriver(path.join(__dirname, './config/local.json')));
 
+var valid = Config.validate();
+if (!valid) {
+  console.log('Config is not valid')
+  console.log(Config.validationErrors())
+} else {
+  console.log('Config is valid')
+}
+
 console.log('validated', Config.get('validated', 'notfound'))
 console.log('simple', Config.get('simple', 'notfound'))
-
-Config.validate();
