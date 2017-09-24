@@ -7,7 +7,11 @@ class JsonDriver extends Driver {
     this.filename = filename
     let cont = fs.readFileSync(this.filename, { encoding: 'utf8' })
     cont = this.removeComments(cont)
-    this.config = JSON.parse(cont)
+    try {
+      this.config = JSON.parse(cont)
+    } catch (e) {
+      throw new Error('Unable to create Driver. Source file is not a valid json.')
+    }
   }
 
   removeComments (input) {

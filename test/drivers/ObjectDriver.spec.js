@@ -21,7 +21,16 @@ const data = {
 
 describe('ObjectDriver', () => {
   it('should be created when data is object', () => {
-    const driver = new ObjectDriver(data)
+    const fn = () => {
+      const driver = new ObjectDriver(data)
+    }
+    expect(fn).not.to.throw()
+  })
+  it('should throw when data is not an object', () => {
+    const fn = () => {
+      const driver = new ObjectDriver(false)
+    }
+    expect(fn).to.throw(Error, /Unable to create Driver/)
   })
   it('should get root paths', () => {
     const driver = new ObjectDriver(data)
