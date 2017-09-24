@@ -15,6 +15,9 @@ class Config {
     this._sources.push(source)
     return this
   }
+  getSources () {
+    return this._sources
+  }
   schema (schema) {
     this._schema = schema
     return this
@@ -24,6 +27,7 @@ class Config {
     return this._schema.validate(this, path)
   }
   validationErrors () {
+    if (!this._schema) throw new Error('Can not validate without a schema.')
     return this._schema.lastErrors
   }
 }
