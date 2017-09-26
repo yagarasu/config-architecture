@@ -11,7 +11,7 @@ class Config {
     }
     return defaultValue
   }
-  addSource (source) {
+  useSource (source) {
     this._sources.push(source)
     return this
   }

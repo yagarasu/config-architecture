@@ -20,9 +20,9 @@ var cs = new ConfigSchema({
 });
 
 Config.schema(cs)
-  .addSource(new JsonDriver(path.join(__dirname, './config/default.json')))
-  .addSource(new JsonDriver(path.join(__dirname, './config/development.json')))
-  .addSource(new JsonDriver(path.join(__dirname, './config/local.json')));
+  .useSource(new JsonDriver(path.join(__dirname, './config/default.json')))
+  .useSource(new JsonDriver(path.join(__dirname, './config/development.json')))
+  .useSource(new JsonDriver(path.join(__dirname, './config/local.json')));
 
 var valid = Config.validate();
 if (!valid) {

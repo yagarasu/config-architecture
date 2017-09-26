@@ -13,7 +13,7 @@ describe('ConfigManager', () => {
     const source = new ObjectDriver({ myField: 'foo' })
 
     expect(cm.getSources()).to.have.lengthOf(0)
-    cm.addSource(source)
+    cm.useSource(source)
     expect(cm.getSources()).to.have.lengthOf(1)
   })
   it('should use sources to resolve a config', () => {
@@ -21,7 +21,7 @@ describe('ConfigManager', () => {
     const source = new ObjectDriver({ myField: 'foo' })
     sinon.spy(source, 'get')
 
-    cm.addSource(source)
+    cm.useSource(source)
 
     const res = cm.get('myField')
 
@@ -32,13 +32,13 @@ describe('ConfigManager', () => {
     const cm = new ConfigManager()
     const source1 = new ObjectDriver({ myField: 'foo' })
     sinon.spy(source1, 'get')
-    cm.addSource(source1)
+    cm.useSource(source1)
     const source2 = new ObjectDriver({})
     sinon.spy(source2, 'get')
-    cm.addSource(source2)
+    cm.useSource(source2)
     const source3 = new ObjectDriver({})
     sinon.spy(source3, 'get')
-    cm.addSource(source3)
+    cm.useSource(source3)
 
     const res = cm.get('myField')
 
@@ -52,7 +52,7 @@ describe('ConfigManager', () => {
     const source = new ObjectDriver({ myField: 'foo' })
     sinon.spy(source, 'get')
 
-    cm.addSource(source)
+    cm.useSource(source)
 
     const res = cm.get('myOtherField', 'bar')
 
